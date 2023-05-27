@@ -45,7 +45,7 @@ class UserManager(BaseUserManager):
 class CustomUser(AbstractUser):
 
     username=None
-    phone_number=models.IntegerField(unique=True)
+    phone_number=models.CharField(max_length=10,unique=True)
     name=models.CharField(max_length=32)
     profile_picture=models.URLField(max_length=1000)
 

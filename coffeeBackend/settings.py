@@ -9,6 +9,10 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import django
+from django.utils.translation import gettext,gettext_lazy
+django.utils.translation.ugettext = gettext
+django.utils.translation.ugettext_lazy = gettext_lazy
 
 from pathlib import Path
 
@@ -38,8 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'graphene_django',
+    'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
+    "graphql_auth",
     'api',
     'users'
+ 
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -55,7 +62,10 @@ MIDDLEWARE = [
 ]
 
 GRAPHENE = {
-    "SCHEMA": "coffeeBackend.schema.schema"
+    "SCHEMA": "coffeeBackend.schema.schema",
+      "MIDDLEWARE": [
+        "graphql_jwt.middleware.JSONWebTokenMiddleware",
+    ],
 }
 
 ROOT_URLCONF = 'coffeeBackend.urls'
@@ -78,10 +88,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'coffeeBackend.wsgi.application'
 
-AUTHENTICATION_BACKENDS = (
-    ('django.contrib.auth.backends.ModelBackend'),
-)
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    "graphql_auth.backends.GraphQLAuthBackend",
+]
+GRAPHQL_AUTH = {
+    'LOGIN_ALLOWED_FIELDS': ['phone_number'],
+    'REGISTER_MUTATION_FIELDS': ['phone_number'],
+    'USER_NODE_FILTER_FIELDS': { 
+        "email": ["exact"], 
+        "is_active": ["exact"],
+        "status__archived": ["exact"],
+        "status__verified": ["exact"],
+        "status__secondary_email": ["exact"],
+    }
+}
 
+GRAPHQL_JWT = {
+    "JWT_VERIFY_EXPIRATION": True,
+
+    # optional
+    "JWT_LONG_RUNNING_REFRESH_TOKEN": True,
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

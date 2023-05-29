@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser,BaseUserManager
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, phone_number,password, name, is_admin=False, is_staff=False, is_active=True,**extra_fields):
+    def create_user(self, phone_number, name, is_admin=False, is_staff=False, is_active=True,**extra_fields):
         if not phone_number:
             raise ValueError("User must have an phone number")
     
@@ -15,14 +15,15 @@ class UserManager(BaseUserManager):
         )
      
         user.name = name
-        user.set_password(password)  # change password to hash
+        # user.set_password(password)  # change password to hash
+        user.set_password('')
         user.is_admin = is_admin
         user.is_staff = is_staff
         user.is_active = is_active
         user.save(using=self._db)
         return user
         
-    def create_superuser(self, phone_number,password, name,**extra_fields):
+    def create_superuser(self, phone_number, password, name,**extra_fields):
         if not phone_number:
             raise ValueError("User must have an phone number")
     
@@ -32,10 +33,11 @@ class UserManager(BaseUserManager):
         )
      
         user.name = name
-        user.set_password(password)  # change password to hash
+        # user.set_password(password)  # change password to hash
   
         user.is_admin = True
         user.is_staff = True
+        user.set_password(password)
         user.is_superuser = True
         user.is_active = True
         user.save(using=self._db)

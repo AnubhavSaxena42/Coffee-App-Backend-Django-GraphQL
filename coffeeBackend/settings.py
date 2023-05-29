@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'graphql_jwt.refresh_token.apps.RefreshTokenConfig',
     "graphql_auth",
+    'django_filters',
     'api',
     'users'
  
@@ -102,7 +103,8 @@ GRAPHQL_AUTH = {
         "status__archived": ["exact"],
         "status__verified": ["exact"],
         "status__secondary_email": ["exact"],
-    }
+    },
+    'UPDATE_MUTATION_FIELDS':['name']
 }
 
 GRAPHQL_JWT = {

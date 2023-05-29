@@ -25,11 +25,8 @@ class UserVerifyMutation(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls,root,info,**input):
-        print(input.get('id'))
         id=input.get('id')
-        print(from_global_id(id)[1])
         user=CustomUser.objects.get(pk=from_global_id(id)[1])
-        print(user.status.verified)
         user.status.verified=True
         user.status.save()
 

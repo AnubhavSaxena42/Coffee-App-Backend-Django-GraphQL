@@ -8,6 +8,8 @@ class AuthMutation(graphene.ObjectType):
    register = mutations.Register.Field()
    token_auth = mutations.ObtainJSONWebToken.Field()
    update_account = mutations.UpdateAccount.Field()
+   verify_token = mutations.VerifyToken.Field()
+   refresh_token = mutations.RefreshToken.Field()
 
 class Query(MeQuery,UserQuery,api.schema.Query,graphene.ObjectType):
    pass
